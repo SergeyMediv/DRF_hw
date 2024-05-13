@@ -18,11 +18,11 @@ class Course(models.Model):
 
 
 class Lesson(models.Model):
-    course = models.ForeignKey(Course, on_delete=models.CASCADE, verbose_name='Курс')
+    course = models.ForeignKey(Course, on_delete=models.SET_NULL, verbose_name='Курс', **NULLABLE)
     name = models.CharField(max_length=100, verbose_name='название', **NULLABLE)
     description = models.TextField(verbose_name='Описание')
     preview = models.ImageField(upload_to='lessons/', verbose_name='Превью', **NULLABLE, help_text='Превью курса')
-    video_link = models.TextField(verbose_name='Видео', help_text='Ссылка на видео')
+    video_link = models.TextField(verbose_name='Видео', help_text='Ссылка на видео', **NULLABLE, default=None)
 
     def __str__(self):
         return f'{self.name} - ({self.course})'
