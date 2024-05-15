@@ -3,7 +3,8 @@ from rest_framework.routers import SimpleRouter
 
 from lessons.apps import LessonsConfig
 from lessons.views import (CourseViewSet, LessonCreateApiView, LessonListApiView, LessonUpdateApiView,
-                           LessonRetrieveAPIView, LessonDestroyAPIView)
+                           LessonRetrieveAPIView, LessonDestroyApiView, PaymentsListApiView, PaymentsRetrieveApiView,
+                           PaymentsCreateApiView, PaymentsUpdateApiView, PaymentsDestroyApiView)
 
 app_name = LessonsConfig.name
 
@@ -15,7 +16,12 @@ urlpatterns = [
     path('lesson/<int:pk>/', LessonRetrieveAPIView.as_view(), name='lesson_retrieve'),
     path('lesson/create/', LessonCreateApiView.as_view(), name='lesson_create'),
     path('lesson/<int:pk>/update/', LessonUpdateApiView.as_view(), name='lesson_update'),
-    path('lesson/<int:pk>/destroy/', LessonDestroyAPIView.as_view(), name='lesson_destroy'),
+    path('lesson/<int:pk>/destroy/', LessonDestroyApiView.as_view(), name='lesson_destroy'),
+    path('payments/', PaymentsListApiView.as_view(), name='payments_list'),
+    path('payments/<int:pk>', PaymentsRetrieveApiView.as_view(), name='payments_list'),
+    path('payments/create/', PaymentsCreateApiView.as_view(), name='payments_list'),
+    path('payments/<int:pk>/update/', PaymentsUpdateApiView.as_view(), name='payments_list'),
+    path('payments/<int:pk>/destroy/', PaymentsDestroyApiView.as_view(), name='payments_list'),
 ]
 
 urlpatterns += router.urls
