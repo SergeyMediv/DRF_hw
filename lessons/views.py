@@ -47,6 +47,8 @@ class PaymentsCreateApiView(CreateAPIView):
 class PaymentsListApiView(ListAPIView):
     queryset = Payments.objects.all()
     serializer_class = PaymentsSerializer
+    filterset_fields = ('pay_method', 'paid_lesson', 'paid_course')
+    ordering_fields = ('date',)
 
 
 class PaymentsUpdateApiView(UpdateAPIView):
