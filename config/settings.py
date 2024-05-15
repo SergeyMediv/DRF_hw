@@ -23,6 +23,7 @@ INSTALLED_APPS = [
     'rest_framework',
     'users',
     'lessons',
+    'django_filters',
 ]
 
 MIDDLEWARE = [
@@ -55,6 +56,9 @@ TEMPLATES = [
 
 WSGI_APPLICATION = 'config.wsgi.application'
 
+REST_FRAMEWORK = {
+    'DEFAULT_FILTER_BACKENDS': ['django_filters.rest_framework.DjangoFilterBackend']
+}
 
 DATABASES = {
     'default': {
@@ -101,3 +105,4 @@ LOGOUT_REDIRECT_URL = '/'
 LOGIN_URL = '/users/login/'
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
+
