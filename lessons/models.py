@@ -41,3 +41,12 @@ class Payments(models.Model):
     summ = models.PositiveIntegerField(verbose_name='сумма платежа')
     pay_choice = {'наличными': 'наличными', 'перевод': 'перевод'}
     pay_method = models.CharField(max_length=30, choices=pay_choice, verbose_name='способ платежа')
+
+    def __str__(self):
+        return (f'Платёж {self.summ} от {self.user} способ оплаты {self.pay_method} '
+                f'за {self.paid_course if self.paid_course else self.paid_lesson}')
+
+    class Meta:
+        verbose_name = 'Платёж'
+        verbose_name_plural = 'Платежи'
+        ordering = ('date',)
