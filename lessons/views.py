@@ -1,9 +1,10 @@
+from rest_framework.permissions import IsAuthenticated, IsAdminUser
 from rest_framework.viewsets import ModelViewSet
 from rest_framework.generics import CreateAPIView, RetrieveAPIView, ListAPIView, UpdateAPIView, DestroyAPIView
 
 from lessons.models import Course, Lesson, Payments
 from lessons.serializers import CourseSerializer, LessonSerializer, CourseDetailSerializer, PaymentsSerializer
-from users.permissions import IsModer
+from users.permissions import IsModer, IsOwner
 
 
 class CourseViewSet(ModelViewSet):
@@ -20,16 +21,19 @@ class CourseViewSet(ModelViewSet):
         course.save()
 
     def get_permissions(self):
-        if self.action in ['create', 'destroy']:
+        if self.action == 'create':
             self.permission_classes = (~IsModer,)
         elif self.action in ['update', 'retrieve']:
-            self.permission_classes = (IsModer,)
+            self.permission_classes = (IsModer | IsOwner,)
+        elif self.action == 'destroy':
+            self.permission_classes = (~IsModer | IsOwner,)
         return super().get_permissions()
 
 
 class LessonCreateApiView(CreateAPIView):
     queryset = Lesson.objects.all()
     serializer_class = LessonSerializer
+    permission_classes = (~IsModer, IsAuthenticated)
 
     def perform_create(self, serializer):
         lesson = serializer.save()
@@ -45,21 +49,25 @@ class LessonListApiView(ListAPIView):
 class LessonUpdateApiView(UpdateAPIView):
     queryset = Lesson.objects.all()
     serializer_class = LessonSerializer
+    permission_classes = (IsModer | IsOwner, IsAuthenticated)
 
 
 class LessonRetrieveAPIView(RetrieveAPIView):
     queryset = Lesson.objects.all()
     serializer_class = LessonSerializer
+    permission_classes = (IsModer | IsOwner, IsAuthenticated)
 
 
 class LessonDestroyApiView(DestroyAPIView):
     queryset = Lesson.objects.all()
     serializer_class = LessonSerializer
+    permission_classes = (~IsModer | IsOwner,)
 
 
 class PaymentsCreateApiView(CreateAPIView):
     queryset = Payments.objects.all()
     serializer_class = PaymentsSerializer
+    permission_classes = (~IsModer, IsAuthenticated)
 
 
 class PaymentsListApiView(ListAPIView):
@@ -67,18 +75,21 @@ class PaymentsListApiView(ListAPIView):
     serializer_class = PaymentsSerializer
     filterset_fields = ('pay_method', 'paid_lesson', 'paid_course')
     ordering_fields = ('date',)
+    permission_classes = IsAdminUser
 
 
 class PaymentsUpdateApiView(UpdateAPIView):
     queryset = Payments.objects.all()
     serializer_class = PaymentsSerializer
-
+    permission_classes = IsAdminUser
 
 class PaymentsRetrieveApiView(RetrieveAPIView):
     queryset = Payments.objects.all()
     serializer_class = PaymentsSerializer
+    permission_classes = IsAdminUser
 
 
 class PaymentsDestroyApiView(DestroyAPIView):
     queryset = Payments.objects.all()
     serializer_class = PaymentsSerializer
+    permission_classes = IsAdminUser
