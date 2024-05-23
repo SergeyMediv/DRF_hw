@@ -61,7 +61,7 @@ class LessonRetrieveAPIView(RetrieveAPIView):
 class LessonDestroyApiView(DestroyAPIView):
     queryset = Lesson.objects.all()
     serializer_class = LessonSerializer
-    permission_classes = (~IsModer | IsOwner,)
+    permission_classes = (~IsModer | IsOwner, IsAuthenticated)
 
 
 class PaymentsCreateApiView(CreateAPIView):
