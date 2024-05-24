@@ -83,6 +83,7 @@ class PaymentsUpdateApiView(UpdateAPIView):
     serializer_class = PaymentsSerializer
     permission_classes = IsAdminUser
 
+
 class PaymentsRetrieveApiView(RetrieveAPIView):
     queryset = Payments.objects.all()
     serializer_class = PaymentsSerializer
