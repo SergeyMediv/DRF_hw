@@ -2,9 +2,12 @@ from rest_framework.fields import SerializerMethodField
 from rest_framework.serializers import ModelSerializer
 
 from lessons.models import Course, Lesson, Payments
+from lessons.validators import YTValidator
 
 
 class LessonSerializer(ModelSerializer):
+    validators = [YTValidator(field='link')]
+
     class Meta:
         model = Lesson
         fields = '__all__'
@@ -23,6 +26,7 @@ class CourseDetailSerializer(ModelSerializer):
 
 
 class CourseSerializer(ModelSerializer):
+
     class Meta:
         model = Course
         fields = '__all__'
