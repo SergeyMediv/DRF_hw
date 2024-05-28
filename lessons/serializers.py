@@ -6,9 +6,9 @@ from lessons.validators import YTValidator
 
 
 class LessonSerializer(ModelSerializer):
-    validators = [YTValidator(field='link')]
 
     class Meta:
+        validators = [YTValidator(field='link')]
         model = Lesson
         fields = '__all__'
 
