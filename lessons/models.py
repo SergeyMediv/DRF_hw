@@ -23,7 +23,7 @@ class Lesson(models.Model):
     name = models.CharField(max_length=100, verbose_name='название', **NULLABLE)
     description = models.TextField(verbose_name='Описание')
     preview = models.ImageField(upload_to='lessons/', verbose_name='Превью', **NULLABLE, help_text='Превью курса')
-    video_link = models.TextField(verbose_name='Видео', help_text='Ссылка на видео', **NULLABLE, default=None)
+    video_link = models.URLField(verbose_name='Видео', help_text='Ссылка на видео', **NULLABLE, default=None)
     owner = models.ForeignKey(User, on_delete=models.SET_NULL, **NULLABLE, verbose_name='владелец')
 
     def __str__(self):
