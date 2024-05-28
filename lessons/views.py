@@ -1,9 +1,12 @@
+from django.shortcuts import get_object_or_404
 from rest_framework.permissions import IsAuthenticated, IsAdminUser
+from rest_framework.response import Response
 from rest_framework.viewsets import ModelViewSet
 from rest_framework.generics import CreateAPIView, RetrieveAPIView, ListAPIView, UpdateAPIView, DestroyAPIView
 
-from lessons.models import Course, Lesson, Payments
-from lessons.serializers import CourseSerializer, LessonSerializer, CourseDetailSerializer, PaymentsSerializer
+from lessons.models import Course, Lesson, Payments, Subscription
+from lessons.serializers import CourseSerializer, LessonSerializer, CourseDetailSerializer, PaymentsSerializer, \
+    SubscriptionSerializer
 from users.permissions import IsModer, IsOwner
 
 
@@ -94,3 +97,22 @@ class PaymentsDestroyApiView(DestroyAPIView):
     queryset = Payments.objects.all()
     serializer_class = PaymentsSerializer
     permission_classes = IsAdminUser
+
+
+class SubscriptionCreateAPIView(CreateAPIView):
+    serializer_class = SubscriptionSerializer
+    permission_classes = [IsAuthenticated]
+
+    def post(self, request, *args, **kwargs):
+        user = self.request.user
+        course_id = self.request.data.get('course')
+        course_item = get_object_or_404(Course,pk=course_id)
+
+        if Subscription.objects.filter(user=user, course=course_item).exists():
+            Subscription.objects.get(user=user, course=course_item).delete()
+            message = 'подписка удалена'
+        else:
+            Subscription.objects.create(user=user, course=course_item)
+            message = 'подписка добавлена'
+
+        return Response({"message": message})

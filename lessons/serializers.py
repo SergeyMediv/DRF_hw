@@ -1,7 +1,7 @@
 from rest_framework.fields import SerializerMethodField
 from rest_framework.serializers import ModelSerializer
 
-from lessons.models import Course, Lesson, Payments
+from lessons.models import Course, Lesson, Payments, Subscription
 from lessons.validators import YTValidator
 
 
@@ -35,4 +35,10 @@ class CourseSerializer(ModelSerializer):
 class PaymentsSerializer(ModelSerializer):
     class Meta:
         model = Payments
+        fields = '__all__'
+
+
+class SubscriptionSerializer(ModelSerializer):
+    class Meta:
+        model = Subscription
         fields = '__all__'
