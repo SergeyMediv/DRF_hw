@@ -26,6 +26,7 @@ INSTALLED_APPS = [
     'lessons',
     'django_filters',
     'rest_framework_simplejwt',
+    'drf_yasg',
 ]
 
 MIDDLEWARE = [
