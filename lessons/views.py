@@ -8,6 +8,7 @@ from lessons.models import Course, Lesson, Payments, Subscription
 from lessons.paginations import CustomPagination
 from lessons.serializers import CourseSerializer, LessonSerializer, CourseDetailSerializer, PaymentsSerializer, \
     SubscriptionSerializer
+from lessons.services import create_stripe_price, create_stripe_product, create_stripe_session
 from users.permissions import IsModer, IsOwner
 
 
@@ -73,7 +74,17 @@ class LessonDestroyApiView(DestroyAPIView):
 class PaymentsCreateApiView(CreateAPIView):
     queryset = Payments.objects.all()
     serializer_class = PaymentsSerializer
-    permission_classes = (~IsModer, IsAuthenticated)
+
+    def perform_create(self, serializer):
+        payment = serializer.save()
+        payment.user = self.request.user
+        stripe_product_id = create_stripe_product(payment)
+        payment.amount = payment.summ
+        price = create_stripe_price(summ=payment.amount, stripe_product_id=stripe_product_id)
+        session_id, payment_link = create_stripe_session(summ=price)
+        payment.session_id = session_id
+        payment.link = payment_link
+        payment.save()
 
 
 class PaymentsListApiView(ListAPIView):

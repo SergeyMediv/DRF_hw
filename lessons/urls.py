@@ -23,7 +23,7 @@ urlpatterns = [
     path('payments/create/', PaymentsCreateApiView.as_view(), name='payments_list'),
     path('payments/<int:pk>/update/', PaymentsUpdateApiView.as_view(), name='payments_list'),
     path('payments/<int:pk>/destroy/', PaymentsDestroyApiView.as_view(), name='payments_list'),
-    path('subscription/create/', SubscriptionCreateAPIView.as_view(), name='subscription_create')
+    path('subscription/create/', SubscriptionCreateAPIView.as_view(), name='subscription_create'),
 ]
 
 urlpatterns += router.urls
