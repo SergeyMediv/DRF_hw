@@ -9,6 +9,7 @@ from lessons.paginations import CustomPagination
 from lessons.serializers import CourseSerializer, LessonSerializer, CourseDetailSerializer, PaymentsSerializer, \
     SubscriptionSerializer
 from lessons.services import create_stripe_price, create_stripe_product, create_stripe_session
+from lessons.tasks import send_email
 from users.permissions import IsModer, IsOwner
 
 
@@ -25,6 +26,12 @@ class CourseViewSet(ModelViewSet):
         course = serializer.save()
         course.owner = self.request.user
         course.save()
+
+    def update(self, request, pk):
+        course = get_object_or_404(Course, pk=pk)
+        send_email.delay(course_id=course.id)
+        print(f'Курс {course.name} обновлён')
+        return super().update(request)
 
     def get_permissions(self):
         if self.action == 'create':
